@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世集广场 - 灵可世集</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --color-primary: #1a1a1a;
+            --color-background: #ffffff;
+            --color-accent: #f5f5f5;
+            --color-text-secondary: #999999;
+            --color-border: #e5e5e5;
+            --color-gold: #d4a574;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter Tight', Arial, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 16px 32px;
+            border-radius: 50px;
+        }
+        
+        .nav-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .nav-links a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 1;
+        }
+        
+        .nav-cta {
+            padding: 10px 20px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .nav-cta:hover {
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #2d2d2d 100%);
+            overflow: hidden;
+            padding-top: 100px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 900px;
+        }
+        
+        .hero-title {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 20px 60px 20px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            background: var(--color-primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #333;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--color-accent);
+            padding: 30px 20px;
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 40px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+        }
+        
+        .filter-section {
+            background: var(--color-accent);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-list {
+            list-style: none;
+        }
+        
+        .filter-item {
+            margin-bottom: 8px;
+        }
+        
+        .filter-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .filter-link:hover,
+        .filter-link.active {
+            background: white;
+        }
+        
+        .filter-icon {
+            font-size: 20px;
+        }
+        
+        .filter-count {
+            margin-left: auto;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .sort-dropdown {
+            padding: 10px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* Merchant Grid */
+        .merchant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .merchant-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .merchant-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .merchant-image {
+            height: 160px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #e8e8e8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+        
+        .merchant-content {
+            padding: 20px;
+        }
+        
+        .merchant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .merchant-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .merchant-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: var(--color-gold);
+        }
+        
+        .merchant-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--color-accent);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .merchant-desc {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .merchant-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .merchant-points {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        
+        .points-badge {
+            background: linear-gradient(135deg, #d4a574 0%, #c9956a 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .merchant-btn {
+            padding: 8px 16px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .merchant-btn:hover {
+            background: #333;
+        }
+        
+        /* Featured Section */
+        .featured-section {
+            background: var(--color-accent);
+            padding: 60px 20px;
+            margin-top: 40px;
+        }
+        
+        .featured-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .featured-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .featured-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .featured-subtitle {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+        
+        .featured-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .featured-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+        
+        .featured-content {
+            flex: 1;
+        }
+        
+        .featured-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .featured-desc {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .featured-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .featured-tag {
+            padding: 4px 12px;
+            background: var(--color-accent);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 60px 20px 30px;
+            background: var(--color-primary);
+            color: white;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .footer-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 16px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .footer-copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .filter-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .filter-title {
+                width: 100%;
+            }
+            
+            .filter-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .filter-item {
+                margin: 0;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .featured-card {
+                flex-direction: column;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">灵可世集</a>
+            <div class="nav-links">
+                <a href="index.html#about">探索</a>
+                <a href="marketplace.html" class="active">世集广场</a>
+                <a href="index.html#community">关于</a>
+            </div>
+            <a href="index.html" class="nav-cta">返回首页</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title reveal">世集广场</h1>
+            <p class="hero-subtitle reveal">发现身边的优质服务商，开启元宇宙本地生活</p>
+            <div class="search-container reveal">
+                <input type="text" class="search-input" placeholder="搜索商家、服务或商品..." id="searchInput">
+                <button class="search-btn">🔍</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item reveal">
+                <div class="stat-number">2,580+</div>
+                <div class="stat-label">入驻商家</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">18</div>
+                <div class="stat-label">服务类别</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">好评率</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">活跃用户</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3 class="filter-title">📂 服务分类</h3>
+                <ul class="filter-list">
+                    <li class="filter-item">
+                        <span class="filter-link active" data-category="all">
+                            <span class="filter-icon">🏪</span>
+                            <span>全部商家</span>
+                            <span class="filter-count">258</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="food">
+                            <span class="filter-icon">🍜</span>
+                            <span>餐饮美食</span>
+                            <span class="filter-count">42</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="shopping">
+                            <span class="filter-icon">🛒</span>
+                            <span>超市便利</span>
+                            <span class="filter-count">35</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="fresh">
+                            <span class="filter-icon">🍎</span>
+                            <span>水果生鲜</span>
+                            <span class="filter-count">28</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="hotel">
+                            <span class="filter-icon">🏨</span>
+                            <span>住宿酒店</span>
+                            <span class="filter-count">24</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="beauty">
+                            <span class="filter-icon">💇</span>
+                            <span>美容美发</span>
+                            <span class="filter-count">31</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="fitness">
+                            <span class="filter-icon">💪</span>
+                            <span>健身运动</span>
+                            <span class="filter-count">18</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="medical">
+                            <span class="filter-icon">🏥</span>
+                            <span>医疗健康</span>
+                            <span class="filter-count">15</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="legal">
+                            <span class="filter-icon">⚖️</span>
+                            <span>法律服务</span>
+                            <span class="filter-count">12</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="education">
+                            <span class="filter-icon">📚</span>
+                            <span>教育培训</span>
+                            <span class="filter-count">20</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="pet">
+                            <span class="filter-icon">🐾</span>
+                            <span>宠物服务</span>
+                            <span class="filter-count">14</span>
+                        </span>
+                    </li>
+                    <li class="filter-item">
+                        <span class="filter-link" data-category="car">
+                        <span class="filter-icon">🚗</span>
+                            <span>汽车服务</span>
+                            <span class="filter-count">19</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="section-header">
+                <h2 class="section-title">热门商家</h2>
+                <select class="sort-dropdown" id="sortSelect">
+                    <option value="popular">按热度排序</option>
+                    <option value="points">按积分排序</option>
+                    <option value="rating">按评分排序</option>
+                    <option value="new">最新入驻</option>
+                </select>
+            </div>
+            
+            <div class="merchant-grid" id="merchantGrid">
+                <!-- Merchant cards will be generated by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Featured Section -->
+    <section class="featured-section">
+        <div class="featured-container">
+            <div class="featured-header">
+                <h2 class="featured-title reveal">精选推荐</h2>
+                <p class="featured-subtitle reveal">社区积分认证的高分商家</p>
+            </div>
+            <div class="featured-grid" id="featuredGrid">
+                <!-- Featured cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">灵可世集</div>
+                    <p class="footer-desc">元宇宙本地生活平台，以社区积分驱动的全新电商生态，连接服务商与用户，开启数字生活新纪元。</p>
+                </div>
+                <div>
+                    <h4 class="footer-title">快速链接</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="marketplace.html">世集广场</a></li>
+                        <li><a href="index.html#about">关于我们</a></li>
+                        <li><a href="index.html#community">社区积分</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-title">服务商</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">入驻申请</a></li>
+                        <li><a href="#">商家中心</a></li>
+                        <li><a href="#">积分规则</a></li>
+                        <li><a href="#">帮助中心</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-title">联系我们</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">contact@lingkeshiji.com</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Telegram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2024 灵可世集. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Merchant data
+        const merchants = [
+            { id: 1, name: '鲜果时光', category: 'fresh', icon: '🍎', rating: 4.9, points: 850, desc: '新鲜水果每日配送，品质保证', sales: '2.3k' },
+            { id: 2, name: '法律智库', category: 'legal', icon: '⚖️', rating: 4.8, points: 1200, desc: '专业律师团队，一对一咨询服务', sales: '890' },
+            { id: 3, name: '川味轩', category: 'food', icon: '🍜', rating: 4.7, points: 720, desc: '正宗川菜，麻辣鲜香', sales: '5.6k' },
+            { id: 4, name: '悦来客栈', category: 'hotel', icon: '🏨', rating: 4.6, points: 950, desc: '温馨舒适的住宿体验', sales: '1.2k' },
+            { id: 5, name: '魅力造型', category: 'beauty', icon: '💇', rating: 4.8, points: 680, desc: '专业美发造型，打造完美形象', sales: '3.1k' },
+            { id: 6, name: '力美健身', category: 'fitness', icon: '💪', rating: 4.9, points: 780, desc: '专业健身指导，科学训练方案', sales: '2.8k' },
+            { id: 7, name: '便利蜂', category: 'shopping', icon: '🛒', rating: 4.5, points: 520, desc: '24小时便利店，生活所需一站购齐', sales: '8.9k' },
+            { id: 8, name: '潮流前线', category: 'fashion', icon: '👕', rating: 4.6, points: 640, desc: '时尚服饰，引领潮流', sales: '1.8k' },
+            { id: 9, name: '学而优', category: 'education', icon: '📚', rating: 4.9, points: 1100, desc: '优质教育资源，助力成长', sales: '1.5k' },
+            { id: 10, name: '康健诊所', category: 'medical', icon: '🏥', rating: 4.8, points: 1300, desc: '专业医疗服务，守护健康', sales: '980' },
+            { id: 11, name: '车管家', category: 'car', icon: '🚗', rating: 4.7, points: 590, desc: '专业汽车维修保养', sales: '2.1k' },
+            { id: 12, name: '萌宠之家', category: 'pet', icon: '🐾', rating: 4.9, points: 720, desc: '宠物护理美容，爱宠首选', sales: '1.6k' },
+            { id: 13, name: '艺境空间', category: 'art', icon: '🎨', rating: 4.6, points: 890, desc: '原创艺术作品，独特品味', sales: '450' },
+            { id: 14, name: '快修侠', category: 'repair', icon: '🔧', rating: 4.8, points: 560, desc: '快速上门维修服务', sales: '3.4k' },
+            { id: 15, name: '数码港', category: 'digital', icon: '💻', rating: 4.5, points: 680, desc: '正品数码产品，售后无忧', sales: '2.2k' },
+            { id: 16, name: '花语轩', category: 'flower', icon: '🌸', rating: 4.9, points: 740, desc: '精美花艺设计，浪漫传递', sales: '1.9k' },
+            { id: 17, name: '江南味道', category: 'food', icon: '🥢', rating: 4.7, points: 810, desc: '地道江南美食，回味无穷', sales: '4.2k' },
+            { id: 18, name: '优选生鲜', category: 'fresh', icon: '🥬', rating: 4.8, points: 920, desc: '有机蔬菜，健康生活', sales: '3.7k' },
+            { id: 19, name: '云端酒店', category: 'hotel', icon: '☁️', rating: 4.9, points: 1050, desc: '高端商务酒店，尊贵体验', sales: '890' },
+            { id: 20, name: '美颜坊', category: 'beauty', icon: '✨', rating: 4.6, points: 630, desc: '专业美容护肤，焕发光彩', sales: '2.5k' },
+        ];
+
+        const featuredMerchants = [
+            { name: '鲜果时光', icon: '🍎', desc: '新鲜水果每日配送，品质保证，会员专享8折优惠', tags: ['新鲜直达', '会员优惠', '积分兑换'] },
+            { name: '法律智库', icon: '⚖️', desc: '专业律师团队，提供合同审查、法律咨询等全方位服务', tags: ['专业团队', '一对一服务', '保密协议'] },
+            { name: '力美健身', icon: '💪', desc: '顶级健身设备，专业私教指导，打造完美身材', tags: ['私教课程', '团体课程', '24小时'] },
+            { name: '悦来客栈', icon: '🏨', desc: '温馨舒适的住宿环境，贴心服务，让您宾至如归', tags: ['免费早餐', '停车免费', '积分抵扣'] },
+        ];
+
+        // Render merchant cards
+        function renderMerchants(merchantList) {
+            const grid = document.getElementById('merchantGrid');
+            grid.innerHTML = merchantList.map(m => `
+                <div class="merchant-card reveal" data-category="${m.category}">
+                    <div class="merchant-image">${m.icon}</div>
+                    <div class="merchant-content">
+                        <div class="merchant-header">
+                            <h3 class="merchant-name">${m.name}</h3>
+                            <div class="merchant-rating">
+                                <span>⭐</span>
+                                <span>${m.rating}</span>
+                            </div>
+                        </div>
+                        <span class="merchant-category">${getCategoryName(m.category)}</span>
+                        <p class="merchant-desc">${m.desc}</p>
+                        <div class="merchant-footer">
+                            <div class="merchant-points">
+                                <span class="points-badge">${m.points} 积分</span>
+                            </div>
+                            <button class="merchant-btn">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Re-trigger animations
+            gsap.fromTo('.merchant-card.reveal', 
+                { opacity: 0, y: 30 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.6, 
+                    stagger: 0.05,
+                    ease: 'power2.out'
+                }
+            );
+        }
+
+        // Render featured cards
+        function renderFeatured() {
+            const grid = document.getElementById('featuredGrid');
+            grid.innerHTML = featuredMerchants.map(m => `
+                <div class="featured-card reveal">
+                    <div class="featured-icon">${m.icon}</div>
+                    <div class="featured-content">
+                        <h3 class="featured-name">${m.name}</h3>
+                        <p class="featured-desc">${m.desc}</p>
+                        <div class="featured-tags">
+                            ${m.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get category name
+        function getCategoryName(category) {
+            const names = {
+                'food': '餐饮美食',
+                'shopping': '超市便利',
+                'fresh': '水果生鲜',
+                'hotel': '住宿酒店',
+                'beauty': '美容美发',
+                'fitness': '健身运动',
+                'fashion': '服装服饰',
+                'education': '教育培训',
+                'medical': '医疗健康',
+                'car': '汽车服务',
+                'pet': '宠物服务',
+                'art': '艺术文创',
+                'repair': '家政维修',
+                'digital': '数码电子',
+                'flower': '鲜花绿植',
+                'legal': '法律服务'
+            };
+            return names[category] || '其他';
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.filter-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                if (category === 'all') {
+                    renderMerchants(merchants);
+                } else {
+                    const filtered = merchants.filter(m => m.category === category);
+                    renderMerchants(filtered);
+                }
+            });
+        });
+
+        // Sort functionality
+        document.getElementById('sortSelect').addEventListener('change', function() {
+            const sortType = this.value;
+            let sorted = [...merchants];
+            
+            switch(sortType) {
+                case 'points':
+                    sorted.sort((a, b) => b.points - a.points);
+                    break;
+                case 'rating':
+                    sorted.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'new':
+                    sorted.reverse();
+                    break;
+                default:
+                    // Keep original order (popular)
+                    break;
+            }
+            
+            renderMerchants(sorted);
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            if (query === '') {
+                renderMerchants(merchants);
+                return;
+            }
+            
+            const filtered = merchants.filter(m => 
+                m.name.toLowerCase().includes(query) ||
+                m.desc.toLowerCase().includes(query) ||
+                getCategoryName(m.category).toLowerCase().includes(query)
+            );
+            renderMerchants(filtered);
+        });
+
+        // Initial render
+        renderMerchants(merchants);
+        renderFeatured();
+
+        // Scroll animations
+        gsap.from('.hero-title', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.hero-subtitle', {
+            opacity: 0,
+            y: 30,
+            duration: 0.8,
+            delay: 0.5,
+            ease: 'power2.out'
+        });
+
+        gsap.from('.search-container', {
+            opacity: 0,
+            y: 30,
+            duration: 0.8,
+            delay: 0.7,
+            ease: 'power2.out'
+        });
+
+        gsap.from('.stat-item', {
+            opacity: 0,
+            y: 20,
+            duration: 0.6,
+            stagger: 0.1,
+            delay: 0.9,
+            ease: 'power2.out'
+        });
+
+        gsap.from('.featured-card.reveal', {
+            scrollTrigger: {
+                trigger: '.featured-section',
+                start: 'top 80%'
+            },
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out'
+        });
+    </script>
+</body>
+</html>

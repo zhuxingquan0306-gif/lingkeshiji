@@ -1,12 +1,1170 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>灵可世集</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵可世集 - 元宇宙本地生活平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #1a1a1a;
+            --color-background: #ffffff;
+            --color-accent: #f5f5f5;
+            --color-text-secondary: #999999;
+            --color-border: #e5e5e5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter Tight', Arial, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            transition: all 0.5s ease;
+            padding: 16px 32px;
+            border-radius: 50px;
+        }
+
+        .nav.scrolled {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .nav-cta {
+            padding: 10px 20px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: rgba(26, 26, 26, 0.9);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-primary);
+            overflow: hidden;
+        }
+
+        .particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 900px;
+        }
+
+        .hero-title {
+            font-size: clamp(60px, 12vw, 120px);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(20px, 3vw, 28px);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 40px;
+            background: white;
+            color: var(--color-primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to top, white, transparent);
+            z-index: 5;
+        }
+
+        /* About Section */
+        .about {
+            padding: 120px 20px;
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-title {
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .about-text {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-top: 60px;
+        }
+
+        .stat-card {
+            background: var(--color-accent);
+            padding: 30px;
+            border-radius: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 120px 20px;
+            background: var(--color-accent);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .service-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 20px;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .features-left {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .features-right {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--color-accent);
+            padding: 40px;
+            border-radius: 24px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Community Section */
+        .community {
+            padding: 120px 20px;
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .community-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .community-title {
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .community-text {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .community-visual {
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .network-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .community-cta {
+            display: inline-block;
+            padding: 16px 40px;
+            background: white;
+            color: var(--color-primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .community-cta:hover {
+            transform: scale(1.05);
+        }
+
+        /* Join Section */
+        .join {
+            padding: 120px 20px;
+            background: white;
+        }
+
+        .join-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .join-title {
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .join-text {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .benefit-text h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .benefit-text p {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .join-form {
+            background: var(--color-accent);
+            padding: 50px;
+            border-radius: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-submit:hover {
+            background: rgba(26, 26, 26, 0.9);
+        }
+
+        .form-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 80px 20px 40px;
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .footer-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-bottom {
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-legal a:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-grid,
+            .features-grid,
+            .community-grid,
+            .join-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .features-left {
+                position: relative;
+                top: 0;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .join-form {
+                padding: 30px;
+            }
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">灵可世集</a>
+            <div class="nav-links">
+                <a href="#about">探索</a>
+                <a href="#services">服务商</a>
+                <a href="#community">关于</a>
+            </div>
+            <a href="marketplace.html" class="nav-cta" style="text-decoration: none;">立即加入</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <canvas class="particle-canvas" id="particleCanvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">灵可世集</h1>
+            <p class="hero-subtitle">元宇宙本地生活平台</p>
+            <p class="hero-desc">以社区积分驱动的全新电商生态，连接服务商与用户，开启数字生活新纪元</p>
+            <a href="marketplace.html" class="hero-cta">立即探索</a>
+        </div>
+        <div class="hero-gradient"></div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-left">
+                    <h2 class="about-title reveal">关于灵可世集</h2>
+                    <p class="about-text reveal">灵可世集是一个元宇宙类型的本地生活平台，提供电商、餐饮、住宿、法律等多元化服务。</p>
+                    <p class="about-text reveal">与传统平台不同，我们的推荐机制基于灵可社区的社区积分，让真正有价值的服务商获得更多曝光。</p>
+                    <p class="about-text reveal">任何人都可以注册使用灵可世集，开启您的元宇宙本地生活之旅。</p>
+                </div>
+                <div class="stats">
+                    <div class="stat-card reveal">
+                        <div class="stat-value">500+</div>
+                        <div class="stat-label">社区积分门槛</div>
+                    </div>
+                    <div class="stat-card reveal">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">去中心化</div>
+                    </div>
+                    <div class="stat-card reveal">
+                        <div class="stat-value">∞</div>
+                        <div class="stat-label">可能性</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title reveal">成为服务商</h2>
+                <p class="section-desc reveal">社区积分达到500分，即可在灵可世集中成为服务商，开启您的元宇宙商业之旅</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="service-icon">🍎</div>
+                    <h3 class="service-name">水果生鲜</h3>
+                    <p class="service-desc">新鲜水果直供</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">⚖️</div>
+                    <h3 class="service-name">律师事务所</h3>
+                    <p class="service-desc">专业法律服务</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🍜</div>
+                    <h3 class="service-name">餐饮美食</h3>
+                    <p class="service-desc">特色美食推荐</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🏨</div>
+                    <h3 class="service-name">住宿酒店</h3>
+                    <p class="service-desc">舒适住宿体验</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">💇</div>
+                    <h3 class="service-name">美容美发</h3>
+                    <p class="service-desc">形象设计服务</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">💪</div>
+                    <h3 class="service-name">健身运动</h3>
+                    <p class="service-desc">健康生活指导</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🛒</div>
+                    <h3 class="service-name">超市便利</h3>
+                    <p class="service-desc">日用百货一站购齐</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">👕</div>
+                    <h3 class="service-name">服装服饰</h3>
+                    <p class="service-desc">潮流穿搭精选</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">📚</div>
+                    <h3 class="service-name">教育培训</h3>
+                    <p class="service-desc">技能提升课程</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🏥</div>
+                    <h3 class="service-name">医疗健康</h3>
+                    <p class="service-desc">专业健康服务</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🚗</div>
+                    <h3 class="service-name">汽车服务</h3>
+                    <p class="service-desc">维修保养美容</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🐾</div>
+                    <h3 class="service-name">宠物服务</h3>
+                    <p class="service-desc">宠物护理美容</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🎨</div>
+                    <h3 class="service-name">艺术文创</h3>
+                    <p class="service-desc">原创设计作品</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🔧</div>
+                    <h3 class="service-name">家政维修</h3>
+                    <p class="service-desc">上门维修服务</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">💻</div>
+                    <h3 class="service-name">数码电子</h3>
+                    <p class="service-desc">电子产品销售</p>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🌸</div>
+                    <h3 class="service-name">鲜花绿植</h3>
+                    <p class="service-desc">花艺设计配送</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="features-left">
+                    <h2 class="section-title reveal">特色功能</h2>
+                    <p class="section-desc reveal">灵可世集提供独特的功能体验，让每一次交互都充满惊喜</p>
+                </div>
+                <div class="features-right">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">社区积分驱动</h3>
+                        <p class="feature-desc">基于灵可社区积分的服务商推荐机制，让真正有价值的服务获得更多曝光</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🌐</div>
+                        <h3 class="feature-title">元宇宙体验</h3>
+                        <p class="feature-desc">沉浸式的数字生活空间，开启全新的线上服务体验</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">去中心化</h3>
+                        <p class="feature-desc">基于区块链的透明生态，确保每一笔交易的安全与可信</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">📦</div>
+                        <h3 class="feature-title">多元服务</h3>
+                        <p class="feature-desc">涵盖电商、餐饮、住宿、法律等多个领域，满足您的各种需求</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="community" id="community">
+        <div class="container">
+            <div class="community-grid">
+                <div class="community-content">
+                    <h2 class="community-title reveal">社区积分</h2>
+                    <p class="community-text reveal">灵可币只有被使用时，才会产生社区积分。社区积分是灵可世界里的权限基础，也是灵可世集推荐机制的核心。</p>
+                    <p class="community-text reveal">社区积分达到500分，用户可以在灵可世集里成为服务商（如水果店、律所、餐饮、住宿）。</p>
+                    <p class="community-text reveal">积分越高，您的服务将获得更多的曝光机会，吸引更多的用户关注。</p>
+                    <a href="#" class="community-cta reveal">了解积分规则</a>
+                </div>
+                <div class="community-visual">
+                    <canvas class="network-canvas" id="networkCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Section -->
+    <section class="join" id="join">
+        <div class="container">
+            <div class="join-grid">
+                <div class="join-content">
+                    <h2 class="join-title reveal">立即加入</h2>
+                    <p class="join-text reveal">任何人都可以注册使用灵可世集，开启您的元宇宙本地生活之旅。成为社区的一员，探索无限可能。</p>
+                    <div class="benefits">
+                        <div class="benefit reveal">
+                            <div class="benefit-icon">🚀</div>
+                            <div class="benefit-text">
+                                <h4>快速注册</h4>
+                                <p>简单几步即可加入</p>
+                            </div>
+                        </div>
+                        <div class="benefit reveal">
+                            <div class="benefit-icon">🎁</div>
+                            <div class="benefit-text">
+                                <h4>专属福利</h4>
+                                <p>新用户专享优惠</p>
+                            </div>
+                        </div>
+                        <div class="benefit reveal">
+                            <div class="benefit-icon">🤝</div>
+                            <div class="benefit-text">
+                                <h4>社区支持</h4>
+                                <p>与志同道合者一起成长</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="join-form reveal">
+                    <form id="joinForm">
+                        <div class="form-group">
+                            <label class="form-label">邮箱地址</label>
+                            <input type="email" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">您的称呼</label>
+                            <input type="text" class="form-input" placeholder="怎么称呼您">
+                        </div>
+                        <button type="submit" class="form-submit">立即加入</button>
+                        <p class="form-note">提交即表示您同意我们的服务条款和隐私政策</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">灵可世集</div>
+                    <p class="footer-desc">元宇宙本地生活平台，以社区积分驱动的全新电商生态，连接服务商与用户，开启数字生活新纪元。</p>
+                </div>
+                <div class="footer-nav">
+                    <h4 class="footer-title">快速链接</h4>
+                    <ul class="footer-links">
+                        <li><a href="#hero">首页</a></li>
+                        <li><a href="#about">探索</a></li>
+                        <li><a href="#services">服务商</a></li>
+                        <li><a href="#community">关于</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4 class="footer-title">联系我们</h4>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">contact@lingkeshiji.com</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">T</a>
+                        <a href="#" class="social-link">D</a>
+                        <a href="#" class="social-link">TG</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2024 灵可世集. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">隐私政策</a>
+                    <a href="#">服务条款</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navigation scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll to section
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Hero particle canvas
+        const particleCanvas = document.getElementById('particleCanvas');
+        const pCtx = particleCanvas.getContext('2d');
+
+        function resizeParticleCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+        resizeParticleCanvas();
+        window.addEventListener('resize', resizeParticleCanvas);
+
+        const particles = [];
+        for (let i = 0; i < 80; i++) {
+            particles.push({
+                x: Math.random() * particleCanvas.width,
+                y: Math.random() * particleCanvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2 + 1
+            });
+        }
+
+        function animateParticles() {
+            pCtx.fillStyle = 'rgba(26, 26, 26, 0.1)';
+            pCtx.fillRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > particleCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > particleCanvas.height) p.vy *= -1;
+
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                pCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                pCtx.fill();
+
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 100) {
+                        pCtx.beginPath();
+                        pCtx.moveTo(p.x, p.y);
+                        pCtx.lineTo(p2.x, p2.y);
+                        pCtx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 100)})`;
+                        pCtx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Network canvas for community section
+        const networkCanvas = document.getElementById('networkCanvas');
+        if (networkCanvas) {
+            const nCtx = networkCanvas.getContext('2d');
+
+            function resizeNetworkCanvas() {
+                const rect = networkCanvas.parentElement.getBoundingClientRect();
+                networkCanvas.width = rect.width;
+                networkCanvas.height = rect.height;
+            }
+            resizeNetworkCanvas();
+            window.addEventListener('resize', resizeNetworkCanvas);
+
+            const networkParticles = [];
+            for (let i = 0; i < 50; i++) {
+                networkParticles.push({
+                    x: Math.random() * networkCanvas.width,
+                    y: Math.random() * networkCanvas.height,
+                    vx: (Math.random() - 0.5) * 1,
+                    vy: (Math.random() - 0.5) * 1
+                });
+            }
+
+            function animateNetwork() {
+                nCtx.fillStyle = 'rgba(26, 26, 26, 1)';
+                nCtx.fillRect(0, 0, networkCanvas.width, networkCanvas.height);
+
+                networkParticles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > networkCanvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > networkCanvas.height) p.vy *= -1;
+
+                    nCtx.beginPath();
+                    nCtx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    nCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    nCtx.fill();
+
+                    networkParticles.slice(i + 1).forEach(p2 => {
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 120) {
+                            nCtx.beginPath();
+                            nCtx.moveTo(p.x, p.y);
+                            nCtx.lineTo(p2.x, p2.y);
+                            nCtx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - dist / 120)})`;
+                            nCtx.lineWidth = 1;
+                            nCtx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animateNetwork);
+            }
+            animateNetwork();
+        }
+
+        // Scroll reveal animations
+        const revealElements = document.querySelectorAll('.reveal');
+
+        revealElements.forEach((el, i) => {
+            gsap.fromTo(el, 
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: i * 0.05,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 85%',
+                        once: true
+                    }
+                }
+            );
+        });
+
+        // Hero animations
+        gsap.from('.hero-title', {
+            opacity: 0,
+            y: 50,
+            duration: 1.2,
+            delay: 0.3,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.hero-subtitle', {
+            opacity: 0,
+            width: 0,
+            duration: 1,
+            delay: 1,
+            ease: 'steps(20)'
+        });
+
+        gsap.from('.hero-desc', {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            delay: 1.5,
+            ease: 'power2.out'
+        });
+
+        gsap.from('.hero-cta', {
+            opacity: 0,
+            scale: 0,
+            duration: 0.8,
+            delay: 2,
+            ease: 'elastic.out(1, 0.5)'
+        });
+
+        // Form submission - redirect to marketplace
+        document.getElementById('joinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.location.href = 'marketplace.html';
+        });
+    </script>
+</body>
 </html>
